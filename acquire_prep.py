@@ -12,4 +12,19 @@ def prep_df():
     '''
     df = acquire_df()
     df.drop(df.columns[0], axis=1, inplace=True)
+
+    '''
+    Below, we lowercase all column headers and replace spaces and hyphens with underscores.
+    '''
+    df.columns = df.columns.str.lower()
+    df.columns = df.columns.str.replace(' ', '_')
+    df.columns = df.columns.str.replace('-', '_')
+
+    '''
+    There are hyphens in sale_price.  They will be dropped.  These are most likely properties that
+    are gifted.  First, whitespace is dropped, then rows with just hyphens are dropped.
+    '''
+    df.sale_price = df.sale_price.str.replace(' ', '')
+    df = df[df.sale_price != '-']
+
     return df
