@@ -21,7 +21,7 @@ def prep_df():
     df.columns = df.columns.str.replace('-', '_')
 
     '''
-    Convert sale_price, land_square_feet, into numeric values.
+    Convert sale_price, land_square_feet into numeric values.
 
     There are hyphens in sale_price.  They will be dropped.  These are most likely properties that
     are gifted.  First, whitespace is dropped, then rows with just hyphens are dropped.
@@ -44,12 +44,18 @@ def prep_df():
     '''
 
     df.gross_square_feet = df.gross_square_feet.str.replace(' ', '')
-    no_sqft_df = df[df.gross_square_feet == '-']
+    no_sqft_df = df[(df.gross_square_feet == '-') | (df.gross_square_feet == '0')]
 
     '''
     Now, we will remove those observations witout gross square feet from the original dataframe
     '''
 
     df = df[df.gross_square_feet != '-']
+    df.gross_square_feet = pd.to_numeric(df.gross_square_feet, downcast='integer')
+    df = df[df.gross_square_feet != 0]
+
+    '''
+    There are only 4 observations with a '-' in land square feet.  These will be dropped.
+    '''
 
     return df, no_sqft_df
