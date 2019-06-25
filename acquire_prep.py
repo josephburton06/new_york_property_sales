@@ -55,7 +55,11 @@ def prep_df():
     df = df[df.gross_square_feet != 0]
 
     '''
-    There are only 4 observations with a '-' in land square feet.  These will be dropped.
+    There are only 4 observations with a '-' in land square feet.  These will be replaced with 0's.
     '''
+
+    df.land_square_feet = df.land_square_feet.str.replace(' ', '')
+    df.land_square_feet = df.land_square_feet.str.replace('-', '0')
+    df.land_square_feet = pd.to_numeric(df.land_square_feet, downcast='integer')
 
     return df, no_sqft_df
